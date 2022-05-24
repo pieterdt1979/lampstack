@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: +0p$ecr3+
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    volumes:
+      - ./webserver/config/mysql/:/etc/mysql/
+    ports:
+      - "3306:3306"
+  web:
+    image: php:8.1.6-apache
+    container_name: php_web
+    depends_on:
+      - db
+    volumes:
+      - ./webserver/www/html/:/var/www/html/
+      - ./webserver/config/apache/:/etc/apache2/
+      - ./webserver/config/php/:/usr/local/etc/php/
+    ports:
+      - "80:80"
+      - "443:443"
+    stdin_open: true
+    tty: true
